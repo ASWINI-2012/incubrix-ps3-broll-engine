@@ -1,0 +1,19 @@
+.venv/
+node_modules/
+dist/
+.tsupgrader/
+__pycache__/
+.pytest_cache/
+.env
+data/
+outputs/
+*.py[cod]
+# Test temporary folders and generated artifacts
+.pytest-*/
+.test-tmp-*/
+pytest-*/
+inspect-end.png
+
+# Python test and coverage output
+.coverage
+htmlcov/

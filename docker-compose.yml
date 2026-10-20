@@ -1,0 +1,44 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    environment:
+      BROLL_PROVIDER: ${BROLL_PROVIDER:-auto}
+      PEXELS_API_KEY: ${PEXELS_API_KEY:-}
+      PIXABAY_API_KEY: ${PIXABAY_API_KEY:-}
+      MEDIA_API_TIMEOUT_SECONDS: ${MEDIA_API_TIMEOUT_SECONDS:-20}
+      MEDIA_API_USER_AGENT: ${MEDIA_API_USER_AGENT:-}
+      IMAGE_GENERATION_BACKEND: ${IMAGE_GENERATION_BACKEND:-}
+      IMAGE_GENERATION_URL: ${IMAGE_GENERATION_URL:-http://host.docker.internal:7860}
+      IMAGE_GENERATION_API_KEY: ${IMAGE_GENERATION_API_KEY:-}
+      IMAGE_GENERATION_MODEL: ${IMAGE_GENERATION_MODEL:-}
+      IMAGE_GENERATION_RESOLUTION: ${IMAGE_GENERATION_RESOLUTION:-512}
+      IMAGE_GENERATION_STEPS: ${IMAGE_GENERATION_STEPS:-20}
+      IMAGE_GENERATION_TIMEOUT_SECONDS: ${IMAGE_GENERATION_TIMEOUT_SECONDS:-300}
+      FOOTAGE_CACHE_DIR: /app/data/media_library/download_cache
+      DATABASE_PATH: /app/data/jobs.sqlite3
+      OUTPUT_DIR: /app/outputs
+      CORS_ORIGINS: http://localhost:5173
+    ports:
+      - "8000:8000"
+    volumes:
+      - job-data:/app/data
+      - job-outputs:/app/outputs
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    environment:
+      VITE_API_URL: http://localhost:8000
+    ports:
+      - "5173:5173"
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  job-data:
+  job-outputs:
